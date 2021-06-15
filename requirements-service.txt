@@ -1,0 +1,5 @@
+# Basic dependencies for the runtime of web service 
+flask ~= 1.1.2
+psutil >= 5.7.0
+gevent ~= 20.12.0
+requests ~= 2.22.0

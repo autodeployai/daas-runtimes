@@ -1,0 +1,20 @@
+# --------------------------------------------------------------
+# Copyright (c) AutoDeployAI. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License").
+# --------------------------------------------------------------
+ARG base=2.4.0-gpu
+FROM tensorflow/tensorflow:${base}
+
+WORKDIR /daas
+COPY requirements-*.txt /daas/
+
+# Setup mirrors
+ARG PIP_MIRROR=
+RUN [ -z "${PIP_MIRROR}" ] || { mkdir -p $HOME/.config/pip &&\
+  echo -e "[global]\nindex-url = https://${PIP_MIRROR}" > $HOME/.config/pip/pip.conf &&\
+  echo "PIP mirror ${PIP_MIRROR} used"; }
+
+RUN python3 -m pip install --upgrade pip &&\
+  python3 -m pip install -r requirements-image.txt &&\
+  python3 -m pip install -r requirements-service.txt &&\
+  rm -rf /root/.cache/pip

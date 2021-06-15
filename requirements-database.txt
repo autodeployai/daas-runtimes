@@ -1,0 +1,8 @@
+# Access various SQL databases: mysql, oracle, sql server
+JPype1 == 0.6.3
+JayDeBeApi
+SQLAlchemy
+cx_oracle == 7.3.0
+pymssql == 2.1.4
+mysqlclient == 1.4.5
+psycopg2 == 2.8.4

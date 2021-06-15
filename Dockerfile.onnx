@@ -1,0 +1,28 @@
+# --------------------------------------------------------------
+# Copyright (c) AutoDeployAI. All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License").
+# --------------------------------------------------------------
+ARG base=v1.5.2-cuda10.2-cudnn8
+FROM mcr.microsoft.com/azureml/onnxruntime:${base}
+
+WORKDIR /daas
+COPY requirements-*.txt /daas/
+
+# Setup mirrors
+ARG APT_MIRROR=
+RUN [ -z "${APT_MIRROR}" ] || { sed -i "s@http://archive.ubuntu.com@http://${APT_MIRROR}@g" /etc/apt/sources.list &&\
+  sed -i "s@http://security.ubuntu.com@http://${APT_MIRROR}@g" /etc/apt/sources.list &&\
+  echo "APT mirror ${APT_MIRROR} used"; }
+ARG PIP_MIRROR=
+RUN [ -z "${PIP_MIRROR}" ] || { mkdir -p $HOME/.config/pip &&\
+  echo "[global]\nindex-url = https://${PIP_MIRROR}" > $HOME/.config/pip/pip.conf &&\
+  echo "PIP mirror ${PIP_MIRROR} used"; }
+
+RUN apt-get update &&\
+  apt-get install -y --no-install-recommends build-essential python3-dev &&\
+  rm -rf /var/lib/apt/lists/*
+
+RUN python3 -m pip install --upgrade pip &&\
+  python3 -m pip install -r requirements-image.txt &&\
+  python3 -m pip install -r requirements-service.txt &&\
+  rm -rf /root/.cache/pip

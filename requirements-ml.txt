@@ -1,0 +1,11 @@
+# Basic machine learning libraries
+py4j == 0.10.7
+pypmml
+numpy
+scipy
+pandas
+scikit-learn
+statsmodels
+sklearn-pandas
+xgboost
+lightgbm
